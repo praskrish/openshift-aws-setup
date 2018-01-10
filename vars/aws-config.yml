@@ -24,6 +24,13 @@ aws_key_pair: "mykeypair"
 # to locate a suitable image
 ami_id: "ami-cfa343b7"
 
+# Whether to install metrics
+install_metrics: false
+# Whether to install prometheus
+install_prometheus: false
+# Whether to install logging
+install_logging: false
+
 # Users to create in OpenShift, highly recommend changing password
 # Set admin to true for users you want to be the cluster administrator
 # Any admin users are also added to master linux VM for cockpit
