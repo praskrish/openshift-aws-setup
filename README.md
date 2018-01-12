@@ -6,8 +6,6 @@ This is an Ansible auotmation playbook that provisions a small OpenShift environ
 
 AWS related configuration can be customised by modifying ```vars/aws-config.yaml```. Note that the number of application nodes is configurable, the default is 3.
 
-The OpenShift inventory can be customized by modifying ```roles/openshift-install/files/openshift_inventory.cfg```, note that dynamic metrics and logging is enabled by default as well as the AWS cloud provider.
-
 ## Prerequisites
 
  - Ansible 2.4 is required
@@ -28,6 +26,14 @@ Where my keypair is the name of your keypair. Obviously you need to have a copy 
 
 The playbook can optionally install CNS storage (gluster) as the default persistent storage provider for application storage. This will provision an additional three nodes dedicated to CNS. To use this feature, set the ```install_gluster``` to true and configure other parameters as needed. Note this is only for application storage, the registry remains on AWS storage.
 
+## Metrics, Logging and Prometheus (3.7)
+
+The playbook can optionally install metrics, logging or prometheus (on 3.7 only). To do so, change ```install_metrics```, ```install_logging``` and ```install_prometheus``` to true.
+
+## OpenShift Inventory
+
+The OpenShift inventory can be customized by modifying ```roles/openshift-install/files/openshift_inventory.cfg``` if you want to have more advanced control over certain features.
+
 ## Master and User Pods
 
 By default, the master will not host user pods, just infra pods. If you want the master to host user pods, comment the ```osm_default_node_selector``` in ```roles/openshift-install/files/openshft_inventory.cfg```. Note that if you also install
@@ -47,11 +53,15 @@ export AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY>
 For OpenShift Origin, the command ```./openshift-playbook-run.sh``` will execute the Ansible playbook
 with a set of roles which will provision AWS infrastructure and install Openshift on top of that.
 
-Installing OpenShift Container Platform (OCP) requires a Red Hat subscription and you must provide your Red Hat credentials
-and the name of the pool to use to the script.
+Installing OpenShift Container Platform (OCP) requires a Red Hat subscription and you must either provide your Red Hat credentials
+and the name of the pool to use to the script or a Red Hat organization and activation id.
 
 ```
 ./openshift-playbook-run.sh -e rhsm_username=me@something.com -e rhsm_password=mypassword -e rhsm_pool="sas876sa8sa76sjk..."
+```
+or
+```
+./openshift-playbook-run.sh -e rhsm_key_id=xxxxx -e rhsm_org_id=xxxxx"
 ```
 Note the above is just an example, please update all variables including the pool name which is correct for your situation.
 

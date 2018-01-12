@@ -18,6 +18,7 @@ aws_key_pair: "mykeypair"
 
 # Use the owner tag if you want to look up the AMI automatically
 #redhat_owner_id: "309956199498"
+
 # Use ami_id if you know the specific ami you want to use, note the ami
 # below refers to a gold image in us-west-2, it's unlikely you have access
 # to it so change this variable to something appropriate. Use the AWS console
@@ -35,13 +36,15 @@ install_logging: false
 # Set admin to true for users you want to be the cluster administrator
 # Any admin users are also added to master linux VM for cockpit
 users:
-  - {name: admin, password: changeme!, admin: true}
-  # - {name: developer1, password: changeme!, admin: false}
-  # - {name: developer2, password: changeme!, admin: false}
-  # - {name: developer3, password: changeme!, admin: false}
-  # - {name: developer4, password: changeme!, admin: false}
-  # - {name: developer5, password: changeme!, admin: false}
-  # - {name: nexus, password: changeme!, admin: false}
+  - {name: admin, password: Welcome1, admin: true}
+
+# Generates a set of non-admin users that can be used for workshops,
+# demos, etc. Users are created with the prefix plus a number using
+# the password specified
+create_generic_user: true
+generic_user_prefix: developer
+generic_user_count: 5
+generic_user_password: Welcome1
 
 #####################################################################
 # Variables you may optionally change for your installation
