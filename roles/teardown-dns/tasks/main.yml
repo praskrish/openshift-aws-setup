@@ -25,8 +25,8 @@
      zone: "{{dns_zone}}"
      state: "absent"
      vpc_region: "{{region}}"
-     comment: "Internal zone for Openshift"
   ignore_errors: yes
+  register: delete_output
 
 - name: Delete Public Route
   include: delete-route.yml zone={{ public_dns_zone }} record={{ public_dns_zone }} private_zone="false"
