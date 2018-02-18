@@ -16,8 +16,8 @@
   retries: 10
   delay: 5      
   become: true
-  when: (rhsm_user_name is defined) and
-        (rhsm_user_pass is defined)  
+  when: (rhsm_username is defined) and
+        (rhsm_password is defined)  
 
 - name: Activation key registration
   redhat_subscription:
@@ -34,14 +34,14 @@
         (rhsm_org_id is defined)  
 
 - name: Subscribe to pool
-  shell: /usr/bin/subscription-manager attach --pool={{ rhsm_pool}}
+  shell: /usr/bin/subscription-manager attach --pool={{ rhsm_pool }}
   register: task_result
   until: task_result.rc == 0
   retries: 10
   delay: 5
   ignore_errors: no      
   become: true
-  when: rhsm_pool_id is defined
+  when: rhsm_pool is defined
 
 - name: Disable Repos
   shell: 'subscription-manager repos --disable="*"'
