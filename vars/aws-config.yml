@@ -36,7 +36,7 @@ install_logging: false
 # Set admin to true for users you want to be the cluster administrator
 # Any admin users are also added to master linux VM for cockpit
 users:
-  - {name: admin, password: Welcome1, admin: true}
+  - {name: admin, password: changeme!, admin: true}
 
 # Generates a set of non-admin users that can be used for workshops,
 # demos, etc. Users are created with the prefix plus a number using
@@ -44,7 +44,7 @@ users:
 create_generic_user: true
 generic_user_prefix: developer
 generic_user_count: 5
-generic_user_password: Welcome1
+generic_user_password: changeme!
 
 #####################################################################
 # Variables you may optionally change for your installation
