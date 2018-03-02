@@ -41,6 +41,13 @@ gluster, this wil cause the gluster nodes to host user pods as well.
 
 _Note:_ This is currently disabled since there is a bug using osm_default_node_selector with gluster install, if you want the master to be unencumbered with user pods please uncomment this line in inventory.cfg. Note you cannot install gluster and have ```osm_default_node_selector``` enabled at the same time at the moment.
 
+## SSL
+
+This playbook can optionally use [letsencrypt](https://letsencrypt.org) to create and install SSL certificates for the master and hawkular metrics (assuming metrics is installed). To use this
+feature, change the ```use_lets_encrypt``` flag in the variables from false to true. Also make sure to set your email address as this is what lets encrypt will use to communicate with you.
+
+Note that lets encrypt as a rate limit for creating certificates of 20 requests a week. To minimize requests to lets encrypt, the playbook will download the certifications locally to where it is running to back them up. You can then set ```use_lets_encrypt``` to false and set the various SSL certificate variables to use the cached certificates.
+
 ## Run
 
 You need to export your AWS credentials prior to running:
