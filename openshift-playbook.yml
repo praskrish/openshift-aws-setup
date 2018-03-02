@@ -52,6 +52,46 @@
   - update-virtual-machines
 
 #############################################################
+# Generate SSL certificates using lets encrypt, fetch to
+# local system and then set ssl vars
+#############################################################
+- name: Generate SSL certificates
+  hosts: master
+  remote_user: "{{ amazon_user }}"
+
+  vars_files:
+    - vars/aws-config.yml
+
+  roles:    
+
+  - {role: generate-ssl-certs, when: use_lets_encrypt}
+
+#############################################################
+# Copy SSL certificates to bastion
+#############################################################
+- name: Copy SSL certificates to bastion
+  hosts: bastion
+  remote_user: "{{ amazon_user }}"
+
+  vars_files:
+    - vars/aws-config.yml
+
+  tasks:
+    - name: create directory for certs
+      file: path=certs/{{item}} state=directory
+      with_items:
+        - "{{public_dns_zone}}"
+        - "{{hawkular_domain}}"
+
+    - name: copy master SSL certificates to bastion
+      copy:
+        src: "{{item}}"
+        dest: certs/{{public_dns_zone}}/{{item | basename}}
+      with_items:
+        - "{{master_ssl_cert_file}}"
+        - "{{master_ssl_key_file}}"
+
+#############################################################
 # Openshift Prerequisites
 #############################################################
 - name: Setup Node hosts
@@ -77,7 +117,7 @@
 # Install Openshift
 #############################################################
 - name: Install OpenShift
-  hosts: local
+  hosts: localhost
 
   vars_files:
     - vars/aws-config.yml
@@ -91,7 +131,40 @@
   - add-users
   - openshift-post-install
 
-  post_tasks:
+#############################################################
+# Update metrics SSL
+#############################################################
+- name: Update metrics SSL
+  hosts: master
+  remote_user: "{{ amazon_user }}"
+
+  vars_files:
+    - vars/aws-config.yml
+
+  roles:
+  - {role: update-ssl-metrics, when: hawkular_ssl_cert_file is defined}
+
+#############################################################
+# Output environment information
+#############################################################
+- name: OpenShift Information
+  hosts: localhost
+
+  tasks:
+   - name: SSL certificate information
+     debug:
+       msg: 
+         - 'SSL certificates have been generated using letsencrypt and backed up locally:'
+         - '\tcerts/letsencrypt\n'
+         - 'Note that letsencrypt is rate limited to 20 requests a week and SSL certificates last for 90 days.'
+         - 'If you need to run the playbook again, consider using the certificates backed up locally by'
+         - 'setting the following variables in vars/aws_config.yml'
+         - '\tmaster_ssl_cert_file: "{{master_ssl_cert_file}}"'
+         - '\tmaster_ssl_key_file: "{{master_ssl_key_file}}"'
+         - '\thawkular_ssl_cert_file: "{{hawkular_ssl_cert_file}}"'
+         - '\thawkular_ssl_key_file: "{{hawkular_ssl_key_file}}"'
+     when: use_lets_encrypt
+
    - name: Confirmation message
      debug:
       msg: 

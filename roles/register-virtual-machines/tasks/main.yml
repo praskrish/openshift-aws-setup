@@ -1,4 +1,8 @@
 ---
+- name: debug key
+  debug:
+    msg: "variables {{rhsm_key_id}} and {{rhsm_org_id}}"
+
 - name: Force unregister before register
   redhat_subscription:
     state: absent
@@ -31,7 +35,7 @@
   delay: 5
   become: true
   when: (rhsm_key_id is defined) and
-        (rhsm_org_id is defined)  
+        (rhsm_org_id is defined)
 
 - name: Subscribe to pool
   shell: /usr/bin/subscription-manager attach --pool={{ rhsm_pool }}
