@@ -72,7 +72,7 @@ domain_email_address: "me@me.com"
 #####################################################################
 
 # Variables for node configuration
-bastion_ami_size: "t2.small"
+bastion_ami_size: "t2.medium"
 master_ami_size: "m4.xlarge"
 node_ami_size: "t2.large"
 master_root_volume_size: 50
