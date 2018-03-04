@@ -150,6 +150,8 @@
 - name: OpenShift Information
   hosts: localhost
 
+  vars_files:
+    - vars/aws-config.yml
   tasks:
    - name: SSL certificate information
      debug:
