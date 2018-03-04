@@ -48,6 +48,8 @@ feature, change the ```use_lets_encrypt``` flag in the variables from false to t
 
 Note that lets encrypt as a rate limit for creating certificates of 20 requests a week. To minimize requests to lets encrypt, the playbook will download the certifications locally to where it is running to back them up. You can then set ```use_lets_encrypt``` to false and set the various SSL certificate variables to use the cached certificates.
 
+The process the playbook uses was taken from this [article](https://www.redpill-linpro.com/sysadvent/2017/12/15/letsencrypt-on-openshift.html), well worth reviewing if you want to understand the process. The one difference is that the playbook uses certbot in standalone mode rather then HAProxy to generate the certificate.
+
 ## Run
 
 You need to export your AWS credentials prior to running:
