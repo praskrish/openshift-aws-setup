@@ -128,13 +128,11 @@
 
   roles:
   - openshift-install
-  - add-users
-  - openshift-post-install
 
 #############################################################
-# Update metrics SSL
+# Post-install tasks 
 #############################################################
-- name: Update metrics SSL
+- name: Post-Install tasks 
   hosts: master
   remote_user: "{{ amazon_user }}"
 
@@ -142,7 +140,11 @@
     - vars/aws-config.yml
 
   roles:
+  - add-users
+  - {role: openshift-gluster-sc, when: install_gluster}
+  - {role: update-ssl-cockpit, when: master_ssl_cert_file is defined}
   - {role: update-ssl-metrics, when: hawkular_ssl_cert_file is defined}
+  - {role: disable-service-catalog, when: disable_service_catalog}
 
 #############################################################
 # Output environment information

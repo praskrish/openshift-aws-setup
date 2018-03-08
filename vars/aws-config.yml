@@ -131,3 +131,6 @@ epel_repo_url: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noar
 
 # Used for SSL certificates for hawkular, do not change this
 hawkular_domain: "hawkular-metrics.{{public_subdomain_prefix}}.{{public_dns_zone}}"
+
+# If true, the service catalog will be disabled
+disable_service_catalog: false
