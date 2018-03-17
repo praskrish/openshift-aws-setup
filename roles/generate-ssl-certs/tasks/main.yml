@@ -33,7 +33,9 @@
 
 - name: install certbot
   yum: 
-    name: certbot
+    name: 
+      - "certbot"
+      - "python2-certbot-dns-route53"
     state: present
   retries: 3
   delay: 5      
@@ -44,10 +46,10 @@
   shell: "certbot certonly -d {{public_dns_zone}} --standalone -m {{domain_email_address}} -n --agree-tos"  
   become: true
 
-- name: generate metrics ssl certificate
-  shell: "certbot certonly -d {{hawkular_domain}} --standalone -m {{domain_email_address}} -n --agree-tos"  
+# TODO: Need to export AWS credentials first here
+- name: generate wildcard ssl certificate
+  shell: "certbot certonly -d *.{{public_subdomain_prefix}}.{{public_dns_zone}} -m {{domain_email_address}} -n --agree-tos --server=https://acme-v02.api.letsencrypt.org/directory --dns-route53"
   become: true
-  when: install_metrics
 
 - name: disable epel repo
   shell: "yum-config-manager --disable epel"
@@ -65,10 +67,10 @@
     - cert.pem
     - chain.pem
 
-- name: fetch hawkular SSL certificates to local machine
+- name: fetch wildcard SSL certificates to local machine
   fetch:
-    src: /etc/letsencrypt/live/{{hawkular_domain}}/{{item}}
-    dest: certs/letsencrypt/{{hawkular_domain}}/{{item}}
+    src: /etc/letsencrypt/live/{{public_subdomain_prefix}}.{{public_dns_zone}}/{{item}}
+    dest: certs/letsencrypt/{{public_subdomain_prefix}}.{{public_dns_zone}}/{{item}}
     flat: true
   become: true
   with_items:
@@ -76,4 +78,3 @@
     - privkey.pem
     - cert.pem
     - chain.pem
-  when: install_metrics

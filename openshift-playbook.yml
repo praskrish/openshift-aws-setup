@@ -157,12 +157,11 @@
       master_ssl_key_file: certs/letsencrypt/{{public_dns_zone}}/privkey.pem
     when: use_lets_encrypt
 
-  - name: Set hawkular SSL facts
+  - name: Set wildcard SSL facts
     set_fact:
-      hawkular_ssl_cert_file: certs/letsencrypt/{{hawkular_domain}}/cert.pem
-      hawkular_ssl_key_file: certs/letsencrypt/{{hawkular_domain}}/privkey.pem
-      hawkular_ssl_chain_file: certs/letsencrypt/{{hawkular_domain}}/chain.pem
-    when: use_lets_encrypt and install_metrics
+      wildcard_ssl_cert_file: certs/letsencrypt/{{public_subdomain_prefix}}.{{public_dns_zone}}/fullchain.pem
+      wildcard_ssl_chain_file: certs/letsencrypt/{{public_subdomain_prefix}}.{{public_dns_zone}}/chain.pem
+    when: use_lets_encrypt
 
   post_tasks:
    - name: SSL certificate information
@@ -175,28 +174,15 @@
          - 'setting the following variables in vars/aws_config.yml'
          - '\tmaster_ssl_cert_file: "{{master_ssl_cert_file}}"'
          - '\tmaster_ssl_key_file: "{{master_ssl_key_file}}"'
-         - '\thawkular_ssl_cert_file: "{{hawkular_ssl_cert_file}}"'
-         - '\thawkular_ssl_chain_file: "{{hawkular_ssl_chain_file}}"'
-         - '\thawkular_ssl_key_file: "{{hawkular_ssl_key_file}}"'
-     when: use_lets_encrypt and install_metrics
-
-   - name: SSL certificate information
-     debug:
-       msg: 
-         - 'SSL certificates have been generated using letsencrypt and backed up locally:'
-         - '\tcerts/letsencrypt\n'
-         - 'Note that letsencrypt is rate limited to 20 requests a week and SSL certificates last for 90 days.'
-         - 'If you need to run the playbook again, consider using the certificates backed up locally by'
-         - 'setting the following variables in vars/aws_config.yml'
-         - '\tmaster_ssl_cert_file: "{{master_ssl_cert_file}}"'
-         - '\tmaster_ssl_key_file: "{{master_ssl_key_file}}"'
-     when: use_lets_encrypt and not install_metrics
+         - '\wildcard_ssl_cert_file: "{{wildcard_ssl_cert_file}}"'
+         - '\twildcard_ssl_key_file: "{{wildcard_ssl_key_file}}"'
+     when: use_lets_encrypt
 
   roles:
   - add-users
   - {role: openshift-gluster-sc, when: install_gluster}
   - {role: update-ssl-cockpit, when: master_ssl_cert_file is defined}
-  - {role: update-ssl-metrics, when: hawkular_ssl_cert_file is defined}
+  - {role: update-ssl-router, when: wildcard_ssl_cert_file is defined}
   - {role: disable-service-catalog, when: disable_service_catalog}
 
 #############################################################
