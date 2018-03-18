@@ -41,14 +41,17 @@
   delay: 5      
   become: true
 
-# Generate master SSL certifcate and copy it to bastion
+# Generate master SSL certificate
 - name: generate master ssl certificate
   shell: "certbot certonly -d {{public_dns_zone}} --standalone -m {{domain_email_address}} -n --agree-tos"  
   become: true
-
-# TODO: Need to export AWS credentials first here
+  
+# Generate wildcard SSL certificate
 - name: generate wildcard ssl certificate
   shell: "certbot certonly -d *.{{public_subdomain_prefix}}.{{public_dns_zone}} -m {{domain_email_address}} -n --agree-tos --server=https://acme-v02.api.letsencrypt.org/directory --dns-route53"
+  environment:
+    - AWS_ACCESS_KEY_ID: "{{ lookup('env','AWS_ACCESS_KEY_ID') }}"
+    - AWS_SECRET_ACCESS_KEY: "{{ lookup('env','AWS_SECRET_ACCESS_KEY') }}"
   become: true
 
 - name: disable epel repo
