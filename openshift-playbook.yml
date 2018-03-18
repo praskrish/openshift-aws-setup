@@ -160,7 +160,7 @@
   - name: Set wildcard SSL facts
     set_fact:
       wildcard_ssl_cert_file: certs/letsencrypt/{{public_subdomain_prefix}}.{{public_dns_zone}}/fullchain.pem
-      wildcard_ssl_chain_file: certs/letsencrypt/{{public_subdomain_prefix}}.{{public_dns_zone}}/chain.pem
+      wildcard_ssl_key_file: certs/letsencrypt/{{public_subdomain_prefix}}.{{public_dns_zone}}/privkey.pem
     when: use_lets_encrypt
 
   post_tasks:
