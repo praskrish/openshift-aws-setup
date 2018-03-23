@@ -44,10 +44,10 @@ _Note:_ You may want to set ```install_node_selector``` to false when you instal
 
 ## SSL
 
-This playbook can optionally use [letsencrypt](https://letsencrypt.org) to create and install SSL certificates for the master and hawkular metrics (assuming metrics is installed). To use this
+This playbook can optionally use [letsencrypt](https://letsencrypt.org) to create and install SSL certificates for the master and router. To use this
 feature, change the ```use_lets_encrypt``` flag in the variables from false to true. Also make sure to set your email address as this is what lets encrypt will use to communicate with you.
 
-Note that lets encrypt as a rate limit for creating certificates of 20 requests a week. To minimize requests to lets encrypt, the playbook will download the certifications locally to where it is running to back them up. You can then set ```use_lets_encrypt``` to false and set the various SSL certificate variables to use the cached certificates.
+Note that lets encrypt as a rate limit for creating certificates of 20 requests a week. To minimize requests to lets encrypt, the playbook will download the certifications locally to where it is running to back them up. You can then set ```use_lets_encrypt``` to false and set the various SSL certificate variables to re-use the cached certificates.
 
 The steps the playbook uses was taken from this [article](https://www.redpill-linpro.com/sysadvent/2017/12/15/letsencrypt-on-openshift.html), well worth reviewing if you want to understand the process. The one difference is that the playbook uses certbot in standalone mode rather then HAProxy to generate the certificate.
 
