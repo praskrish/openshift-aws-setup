@@ -6,25 +6,45 @@
       "tag:Name": "{{namespace}}-vpc"
   register: vpc_facts
 
-- name: Remove subnets and route tables from VPC
-  local_action:
-    module: ec2_vpc
-    vpc_id: "{{ item.id }}"
+- name: Gather route table facts
+  ec2_vpc_route_table_facts:
     region: "{{ region }}"
-    state: present
-    resource_tags: "{}"
-    subnets: []
-    internet_gateway: False
-    route_tables: []
-    wait: yes
+    filters:
+      vpc-id: "{{ vpc_facts.vpcs[0].vpc_id }}"
+  register: vpc_route_table_facts    
+
+- name: Remove route tables from VPC
+  ec2_vpc_route_table:
+    vpc_id: "{{ item.vpc_id }}"
+    route_table_id: "{{item.id}}"
+    purge_routes: true
+    purge_subnets: true
+    region: "{{ region }}"
+    state: absent
+    lookup: id
+  with_items: "{{ vpc_route_table_facts.route_tables }}"
+  ignore_errors: true
+
+- name: Remove subnets from VPC
+  ec2_vpc_subnet:
+    vpc_id: "{{ item.id }}"
+    cidr: "{{subnet_cidr}}"
+    region: "{{ region }}"
+    state: absent
   with_items: "{{ vpc_facts.vpcs }}"
 
-- name: Delete VPC
-  local_action:
-    module: ec2_vpc
+- name: Remove internet gateway
+  ec2_vpc_igw:
     vpc_id: "{{ item.id }}"
     region: "{{ region }}"
     state: absent
-    resource_tags: "{}"
-    wait: yes  
+  with_items: "{{ vpc_facts.vpcs }}"    
+
+- name: Delete VPC
+  ec2_vpc_net:
+    name: "{{namespace}}-vpc"
+    cidr_block: "{{ vpc_cidr }}"
+    region: "{{ region }}"
+    state: absent
+  wait: yes  
   with_items: "{{ vpc_facts.vpcs }}"    

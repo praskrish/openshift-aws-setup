@@ -14,9 +14,8 @@
     state: present
     username: "{{rhsm_username}}"
     password: "{{rhsm_password}}"
-    autosubscribe: false
   register: result
-  until: result | succeeded
+  until: result is succeeded
   retries: 10
   delay: 5      
   become: true
@@ -28,9 +27,8 @@
     state: "present"
     activationkey: "{{ rhsm_key_id }}"
     org_id: "{{ rhsm_org_id }}"
-    autosubscribe: false
   register: result
-  until: result | succeeded
+  until: result is succeeded
   retries: 10
   delay: 5
   become: true
@@ -50,15 +48,15 @@
 - name: Disable Repos
   shell: 'subscription-manager repos --disable="*"'
   register: result
-  until: result | succeeded
+  until: result is succeeded
   retries: 10
   delay: 5      
   become: true
 
 - name: Enable required repos
-  shell: 'subscription-manager repos --enable="rhel-7-server-rpms" --enable="rhel-7-server-extras-rpms" --enable="rhel-7-server-ose-{{ocp_version}}-rpms" --enable="rhel-7-fast-datapath-rpms"'
+  shell: 'subscription-manager repos --enable="rhel-7-server-rpms" --enable="rhel-7-server-extras-rpms" --enable="rhel-7-server-ose-{{ocp_version}}-rpms" --enable="rhel-7-fast-datapath-rpms" --enable="rhel-7-server-ansible-2.4-rpms"'
   register: result
-  until: result | succeeded
+  until: result is succeeded
   retries: 10
   delay: 5      
   become: true

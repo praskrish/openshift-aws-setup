@@ -27,12 +27,12 @@
   become: true
   when: deployment_type != 'origin'
 
-- name: copy inventory for openshift istallation
-  template:
-    src: "../files/openshift_inventory.cfg"
-    dest: "~{{amazon_user}}/openshift_inventory.cfg"
-  delegate_to: "{{bastion_public_ip}}"
-  remote_user: "{{amazon_user}}"
+# - name: copy inventory for openshift istallation
+#   template:
+#     src: "../files/openshift_inventory.cfg"
+#     dest: "~{{amazon_user}}/openshift_inventory.cfg"
+#   delegate_to: "{{bastion_public_ip}}"
+#   remote_user: "{{amazon_user}}"
 
 - name: checkout openshift ansible repo on bastion
   git:

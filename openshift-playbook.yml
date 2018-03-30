@@ -21,8 +21,8 @@
       assert:
         that: 
           - "ansible_version.major == 2"
-          - "ansible_version.minor == 4"
-        msg: "This script is only supported with the 2.4.1 version of Ansible or later"
+          - "ansible_version.minor >= 4"
+        msg: "This script is only supported with the 2.4.1 version or later of Ansible"
     
     - fail: msg="Variables required to register subscriptions are missing, please confirm that either rhsm_username, rhsm_password and rhsm_pool OR rhsm_key_id and rhsm_org_id is defined"
       when: (deployment_type == 'openshift-enterprise') and not (((rhsm_username is defined) and (rhsm_password is defined) and (rhsm_pool is defined)) or ((rhsm_key_id is defined) and (rhsm_org_id is defined)))
