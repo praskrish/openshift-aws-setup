@@ -1,8 +1,4 @@
 ---
-- name: debug key
-  debug:
-    msg: "variables {{rhsm_key_id}} and {{rhsm_org_id}}"
-
 - name: Force unregister before register
   redhat_subscription:
     state: absent
