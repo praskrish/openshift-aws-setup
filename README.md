@@ -14,6 +14,7 @@ AWS related configuration can be customised by modifying ```vars/aws-config.yaml
  - Route 53 Public Hosted Zone. The playbook use Route53 for private and public DNS and routes. While the playbook automatically creates everything for the private DNS hosted zone and routes, it is expected that you have a public hosted zone in Route 53 that matches whatever you are using for the public DNS.
  - By default a single admin user is created called ```admin``` that can be used to login into the web console. The password for the user is in the ```vars/aws-config.yml``` vars file. __PLEASE CHANGE THE PASSWORD TO SOMETHING UNIQUE!__. Other users can be added to this file as well.
  - An AWS keypair must be generated and the reference in ```vars/aws-config.yml``` must be updated to reference it (Currently referencing mykeypair).
+ - Use the appropriate ami for the install
  - You must update the ```~/.ssh/config``` file to include your keypair so the playbook can access the VMs in AWS. To do this, include the following line in you config file:
 
  ```
