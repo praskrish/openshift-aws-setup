@@ -76,6 +76,9 @@ or
 ```
 Note the above is just an example, please update all variables including the pool name which is correct for your situation.
 
+## Possible errors with Python distro
+If you receive errors with python on boto and botocore libraries.
+Run pip install boto and pip install botocore3 commands from your local workstation.
 ## Network Topology
 
 ![Network Diagram](./docs/network-topology-openshift.jpg)
