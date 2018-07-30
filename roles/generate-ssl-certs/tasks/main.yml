@@ -20,7 +20,27 @@
   retries: 3
   delay: 5      
   become: true
+  
+- name: install pip
+  yum:
+    name: "python-pip"
+    state: present
+  register: result
+  until: result | succeeded
+  retries: 3
+  delay: 5
+  become: true
 
+# upgrade pip
+- name: Upgrade pip
+  shell: "pip install --upgrade pip"
+  become: true
+
+# upgrade Cryptography
+- name: Upgrade cryptography
+  shell: "pip install --upgrade cryptography"
+  become: true
+  
 - name: install pyOpenSSL 16.2 for certbot
   yum:
     name: "https://www.rpmfind.net/linux/fedora/linux/updates/25/x86_64/Packages/p/pyOpenSSL-16.2.0-2.fc25.noarch.rpm"
