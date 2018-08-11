@@ -43,7 +43,7 @@
   
 - name: install pyOpenSSL 16.2 for certbot
   yum:
-    name: "https://www.rpmfind.net/linux/fedora/linux/updates/25/x86_64/Packages/p/pyOpenSSL-16.2.0-2.fc25.noarch.rpm"
+    name: "https://rpmfind.net/linux/fedora/linux/releases/27/Everything/x86_64/os/Packages/p/python2-pyOpenSSL-17.2.0-2.fc27.noarch.rpm"
     state: present
   register: result
   until: result | succeeded
